@@ -33,6 +33,10 @@ var telegram = {
             // Log the response code
             telegramResponse.on('end', function() {
                 console.log('Telegram API response code: ' + telegramResponse.statusCode);
+                // Log the repsonse message if the status code is not OK
+                if (telegramResponse.statusCode !== 200) {
+                    console.log(output);
+                }
             });
         });
         // Handle error
