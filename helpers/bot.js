@@ -62,8 +62,9 @@ var bot = {
                           '/q what is DuckDuckGo?\n' +
                           '\n' +
                           '\n' + 
-                          '@DuckDuckBot is open source and currently developed by @rvanmil.\n' +
-                          'You can find the source code on GitHub.';
+                          'DuckDuckBot does not collect or share personal information.\n' +
+                          '\n' +
+                          'DuckDuckBot is open source. You can find the source code on GitHub.';
         telegram.sendMessage(chat_id, helpMessage, reply_to_message_id);
     },
 
