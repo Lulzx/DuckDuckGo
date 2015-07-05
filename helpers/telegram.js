@@ -1,6 +1,7 @@
 var https = require('https');
 var config = require('../config/config.js');
 var querystring = require('querystring');
+var _ = require('underscore');
 
 var telegram = {
 
@@ -38,20 +39,23 @@ var telegram = {
                 if (telegramResponse.statusCode !== 200) {
                     console.log(output);
                 }
-                onDone();
+                if (!_.isUndefined(onDone)) {
+                    onDone();
+                }
             });
         });
         // Handle error
         telegramRequest.on('error', function(err) {
             // Log the error
             console.error('Telegram API error: ' + err.message);
-            onDone();
+            if (!_.isUndefined(onDone)) {
+                onDone();
+            }
         });
         // Send the input
         telegramRequest.write(telegramRequestData);
         // End the request
         telegramRequest.end();
-        onDone();
     }
 
 };
