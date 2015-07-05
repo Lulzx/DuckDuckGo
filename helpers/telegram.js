@@ -25,6 +25,11 @@ var telegram = {
         // Execute the request
         var telegramRequest = https.request(telegramRequestOptions, function(telegramResponse) {
             telegramResponse.setEncoding('utf8');
+            // Read the response
+            var output = '';
+            ddgResponse.on('data', function (chunk) {
+                output += chunk;
+            });
             // Log the response code
             telegramResponse.on('end', function() {
                 console.log('Telegram API response code: ' + telegramResponse.statusCode);
