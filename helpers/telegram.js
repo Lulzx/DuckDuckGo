@@ -27,7 +27,7 @@ var telegram = {
             telegramResponse.setEncoding('utf8');
             // Read the response
             var output = '';
-            ddgResponse.on('data', function (chunk) {
+            telegramResponse.on('data', function (chunk) {
                 output += chunk;
             });
             // Log the response code
