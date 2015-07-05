@@ -33,8 +33,7 @@ var ddg = {
                 console.log('DuckDuckGo API response code: ' + ddgResponse.statusCode);
                 // Parse the response
                 var responseData = JSON.parse(output);
-                var isBang = (question.lastIndexOf('!', 0) === 0);
-                var answer = ddg.parseResponse(responseData, maxLength, isBang);
+                var answer = ddg.parseResponse(responseData, maxLength);
                 onAnswer(answer);
             });
         });
@@ -49,17 +48,14 @@ var ddg = {
         ddgRequest.end();
     },
 
-    parseResponse: function(responseData, maxLength, isBang) {
+    parseResponse: function(responseData, maxLength) {
         var answerMessages = [];
         var answer = '';
-        // If it was a !bang question, then only return the redirect link
-        if (isBang) {
+        // If a Redirect is available, then the question was a !bang command
+        if (!_.isUndefined(responseData.Redirect) && responseData.Redirect.length > 0) {
             // Heading
             answer = 'You have requested a !bang link. Here it is:\n';
-            // Get the redirect link
-            if (!_.isUndefined(responseData.Redirect) && responseData.Redirect.length > 0) {
-                answer += responseData.Redirect;
-            }
+            answer += responseData.Redirect;
             answerMessages.push(answer);
             return answerMessages;
         } else {
