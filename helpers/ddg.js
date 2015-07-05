@@ -61,13 +61,43 @@ var ddg = {
         } else {
             // First check if an abstract was returned
             if (!_.isUndefined(responseData.AbstractText) && responseData.AbstractText.length > 0) {
-                answer += responseData.AbstractText + '\n';
+                answer += responseData.AbstractText + '\n\n';
             }
             // Add abstract source if one was returned
             if (!_.isUndefined(responseData.AbstractSource) && responseData.AbstractSource.length > 0 && !_.isUndefined(responseData.AbstractURL) && responseData.AbstractURL.length > 0) {
-                answer += responseData.AbstractSource + ': ' + responseData.AbstractURL + '\n'
+                answer += responseData.AbstractSource + ': ' + responseData.AbstractURL + '\n\n'
             }
+            // InfoBox
+            answer += ddg.parseInfoBox(responseData.Infobox);
+
             return answer;
+        }
+    },
+
+    parseInfoBox: function(infoBox) {
+        var infoBoxTitle = '';
+        var infoBoxValueString = '';
+        if (!_.isUndefined(infoBox) && !_.isUndefined(infoBox.meta) && infoBox.meta.length > 0 && !_.isUndefined(infoBox.content) && infoBox.content.length > 0) {
+            // Get the article title
+            _.each(infoBox.meta, function(meta){
+                if (meta.data_type === 'string' && meta.label === 'article_title') {
+                    infoBoxTitle = meta.value;
+                }
+            }, this);
+            // Read all content items and add the string values to the infobox string
+            _.each(infoBox.content, function(content){
+                if (content.data_type === 'string') {
+                    if (!_.isUndefined(content.label) && content.label.length > 0 && !_.isUndefined(content.value) && content.value.length > 0) {
+                        infoBoxValueString += content.label + ': ' + content.value + '\n';
+                    }
+                }
+            }, this);
+        }
+        // Only return if title and values were found
+        if (infoBoxTitle.length > 0 && infoBoxValueString.length > 0) {
+            return infoBoxTitle + ' info: \n' + infoBoxValueString + '\n\n';
+        } else {
+            return '';
         }
     }
 
