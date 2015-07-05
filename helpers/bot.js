@@ -4,6 +4,8 @@ var ddg = require('../helpers/ddg.js');
 
 var bot = {
 
+    maxMessageLength: 4096,
+
     processUpdate: function(telegramUpdate) {
         // Check the update
         if (!_.isUndefined(telegramUpdate.message) && !_.isUndefined(telegramUpdate.message.chat)) {
@@ -32,20 +34,43 @@ var bot = {
     sendAnswer: function(chat_id, reply_to_message_id, first_name, username, message) {
         // Get the question from the message
         var question = message.replace(/^\/q/, '').trim();
+        var replyMessage = '';
         if (!_.isUndefined(question) && question.length > 0) {
+            // Init the reply message
+            var replyTo = (_.isUndefined(username)) ? first_name : '@' + username;
+            var replyMessageHeader = replyTo + ', here is the answer to your question:\n\n';
+            // Calculate the maximum answer length
+            var maxLength = bot.maxMessageLength - replyMessageHeader.length;
             // Get the answer from DuckDuckGo
-            ddg.getAnswer(question, function(answer) {
-                // Create the answer message
-                var answerMessage;
-                var replyTo = (_.isUndefined(username)) ? first_name : '@' + username;
-                if (!_.isUndefined(answer) && answer.length > 0) {
-                    var answerMessage = replyTo + ', here is the answer to your question:\n\n';
-                    answerMessage += answer;
+            ddg.getAnswerMessages(question, maxLength, function(answerMessages) {
+                // Create the reply message(s)
+                if (!_.isUndefined(answerMessages) && answerMessages.length > 0) {
+                    // Send a reply for each answer message
+                    // Use the onDone callback to make sure the messages are sent in the correct order
+                    var currentAnswerMessage = 0;
+                    var onDone = _.bind(function() {
+                        // Send the next message
+                        // Add a short delay so the messages are also received in the correct order
+                        // (I'm currently unaware of a way to do this properly through the Telegram API)
+                        var sendNext = _.bind(function() {
+                            currentAnswerMessage++;
+                            if (currentAnswerMessage < answerMessages.length) {
+                                replyMessage = answerMessages[currentAnswerMessage];
+                                telegram.sendMessage(chat_id, replyMessage, reply_to_message_id, true, onDone);
+                            } else {
+                                // Done, all messages sent
+                            }
+                        }, this);
+                        _.delay(sendNext, 1000);
+                    }, this);
+                    var firstAnswerMessage = _.first(answerMessages);
+                    replyMessage = replyMessageHeader + firstAnswerMessage;
+                    telegram.sendMessage(chat_id, replyMessage, reply_to_message_id, true, onDone);
                 } else {
-                    var answerMessage = replyTo + ', I\'m sorry but I could not find an answer to your question.';
+                    // No answer found
+                    replyMessage = replyTo + ', I\'m sorry but I could not find an answer to your question.';
+                    telegram.sendMessage(chat_id, replyMessage, reply_to_message_id, true);
                 }
-                // Send answer message with Telegram API
-                telegram.sendMessage(chat_id, answerMessage, reply_to_message_id, true);
             });
         } else {
             // Question is missing, send the help text

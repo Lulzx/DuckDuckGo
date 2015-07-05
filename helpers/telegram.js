@@ -4,7 +4,7 @@ var querystring = require('querystring');
 
 var telegram = {
 
-    sendMessage: function(chat_id, text, reply_to_message_id, disable_web_page_preview) {
+    sendMessage: function(chat_id, text, reply_to_message_id, disable_web_page_preview, onDone) {
         // Input for the Telegram API
         var telegramRequestData = querystring.stringify({
             chat_id: chat_id,
@@ -38,17 +38,20 @@ var telegram = {
                 if (telegramResponse.statusCode !== 200) {
                     console.log(output);
                 }
+                onDone();
             });
         });
         // Handle error
         telegramRequest.on('error', function(err) {
             // Log the error
             console.error('Telegram API error: ' + err.message);
+            onDone();
         });
         // Send the input
         telegramRequest.write(telegramRequestData);
         // End the request
         telegramRequest.end();
+        onDone();
     }
 
 };
