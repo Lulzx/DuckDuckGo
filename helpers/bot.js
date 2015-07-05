@@ -19,8 +19,10 @@ var bot = {
                     // Check the command
                     if (message.lastIndexOf('/q', 0) === 0) {
                         bot.sendAnswer(chat_id, reply_to_message_id, first_name, username, message);
-                    } else if (message.lastIndexOf('/help', 0) === 0) {
+                    } else if ((message.lastIndexOf('/start', 0) === 0) || (message.lastIndexOf('/help', 0) === 0)) {
                         bot.sendHelp(chat_id, reply_to_message_id, first_name, username);
+                    } else if (message.lastIndexOf('/settings', 0) === 0) {
+                        bot.sendSettings(chat_id, reply_to_message_id, first_name, username);
                     }
                 }
             }
@@ -62,6 +64,12 @@ var bot = {
                           '\n' + 
                           '@DuckDuckBot is open source and currently developed by @rvanmil.\n' +
                           'You can find the source code on GitHub.';
+        telegram.sendMessage(chat_id, helpMessage, reply_to_message_id);
+    },
+
+    sendSettings: function(chat_id, reply_to_message_id, first_name, username) {
+        // Send settings message with Telegram API
+        var helpMessage = '@DuckDuckBot has no settings.';
         telegram.sendMessage(chat_id, helpMessage, reply_to_message_id);
     }
 
