@@ -75,6 +75,8 @@ var ddg = {
             }
             // InfoBox
             answer += ddg.parseInfoBox(responseData.Infobox);
+            // Results
+            answer += ddg.parseResults(responseData.Results);
 
             return answer;
         }
@@ -101,7 +103,25 @@ var ddg = {
         }
         // Only return if title and values were found
         if (infoBoxTitle.length > 0 && infoBoxValueString.length > 0) {
-            return infoBoxTitle + ' info: \n' + infoBoxValueString + '\n\n';
+            return infoBoxTitle + ' Info\n' + infoBoxValueString + '\n';
+        } else {
+            return '';
+        }
+    },
+
+    parseResults: function(results) {
+        var resultsString = '';
+        if (!_.isUndefined(results) && results.length > 0) {
+            // Read all results items and add the links to the results string
+            _.each(results, function(result){
+                if (!_.isUndefined(result.Text) && result.Text.length > 0 && !_.isUndefined(result.FirstURL) && result.FirstURL.length > 0) {
+                    resultsString += result.Text + ': ' + result.FirstURL + '\n';
+                }
+            }, this);
+        }
+        // Only return if values were found
+        if (resultsString.length > 0) {
+            return 'Links\n' + resultsString + '\n';
         } else {
             return '';
         }
