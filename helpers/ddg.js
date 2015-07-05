@@ -61,7 +61,11 @@ var ddg = {
         } else {
             // First check if an abstract was returned
             if (!_.isUndefined(responseData.AbstractText) && responseData.AbstractText.length > 0) {
-                answer = responseData.AbstractText;
+                answer += responseData.AbstractText + '\n';
+            }
+            // Add abstract source if one was returned
+            if (!_.isUndefined(responseData.AbstractSource) && responseData.AbstractSource.length > 0 && !_.isUndefined(responseData.AbstractURL) && responseData.AbstractURL.length > 0) {
+                answer += responseData.AbstractSource + ': ' + responseData.AbstractURL + '\n'
             }
             return answer;
         }
