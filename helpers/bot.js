@@ -45,7 +45,7 @@ var bot = {
                     var answerMessage = replyTo + ', I\'m sorry but I could not find an answer to your question.';
                 }
                 // Send answer message with Telegram API
-                telegram.sendMessage(chat_id, answerMessage, reply_to_message_id);
+                telegram.sendMessage(chat_id, answerMessage, reply_to_message_id, true);
             });
         } else {
             // Question is missing, send the help text
@@ -64,14 +64,14 @@ var bot = {
                           '\n' + 
                           'DuckDuckBot does not collect or share personal information.\n' +
                           '\n' +
-                          'DuckDuckBot is open source. You can find the source code on GitHub.';
-        telegram.sendMessage(chat_id, helpMessage, reply_to_message_id);
+                          'DuckDuckBot is open source. You can find the source code on GitHub (https://github.com/rvanmil/DuckDuckBot).';
+        telegram.sendMessage(chat_id, helpMessage, reply_to_message_id, true);
     },
 
     sendSettings: function(chat_id, reply_to_message_id, first_name, username) {
         // Send settings message with Telegram API
         var helpMessage = '@DuckDuckBot has no settings.';
-        telegram.sendMessage(chat_id, helpMessage, reply_to_message_id);
+        telegram.sendMessage(chat_id, helpMessage, reply_to_message_id, true);
     }
 
 };

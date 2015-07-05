@@ -4,12 +4,13 @@ var querystring = require('querystring');
 
 var telegram = {
 
-    sendMessage: function(chat_id, text, reply_to_message_id) {
+    sendMessage: function(chat_id, text, reply_to_message_id, disable_web_page_preview) {
         // Input for the Telegram API
         var telegramRequestData = querystring.stringify({
             chat_id: chat_id,
             text: text,
-            reply_to_message_id: reply_to_message_id
+            reply_to_message_id: reply_to_message_id,
+            disable_web_page_preview: disable_web_page_preview
         });
         // Create the request
         var telegramRequestOptions = {
