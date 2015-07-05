@@ -53,12 +53,18 @@ var ddg = {
         var answer = '';
         // If it was a !bang question, then only return the redirect link
         if (isBang) {
+            // Heading
+            answer = 'You have requested a !bang link. Here it is:\n';
             // Get the redirect link
             if (!_.isUndefined(responseData.Redirect) && responseData.Redirect.length > 0) {
-                answer = responseData.Redirect;
+                answer += responseData.Redirect;
             }
             return answer;
         } else {
+            // Heading
+            if (!_.isUndefined(responseData.Heading) && responseData.Heading.length > 0) {
+                answer += responseData.Heading + '\n\n';
+            }
             // First check if an abstract was returned
             if (!_.isUndefined(responseData.AbstractText) && responseData.AbstractText.length > 0) {
                 answer += responseData.AbstractText + '\n\n';
