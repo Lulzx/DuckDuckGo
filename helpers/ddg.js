@@ -29,9 +29,10 @@ var ddg = {
             });
             // Parse the output when the response has ended
             ddgResponse.on('end', function() {
-                var responseData = JSON.parse(output);
-                console.log('ddg - received response code: ' + ddgResponse.statusCode);
+                // Log the response code
+                console.log('DuckDuckGo API response code: ' + ddgResponse.statusCode);
                 // Parse the response
+                var responseData = JSON.parse(output);
                 var isBang = (question.lastIndexOf('!', 0) === 0);
                 var answer = ddg.parseResponse(responseData, isBang);
                 onAnswer(answer);
@@ -39,7 +40,9 @@ var ddg = {
         });
         // Handle error
         ddgRequest.on('error', function(err) {
-            console.error('ddg API error: ' + err.message);
+            // Log the error
+            console.error('DuckDuckGo API error: ' + err.message);
+            // Return an error message
             onAnswer('Sorry, could not retrieve an answer from DuckDuckGo.');
         });
         // End the request

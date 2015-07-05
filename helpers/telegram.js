@@ -5,13 +5,13 @@ var querystring = require('querystring');
 var telegram = {
 
     sendMessage: function(chat_id, text, reply_to_message_id) {
-
+        // Input for the Telegram API
         var telegramRequestData = querystring.stringify({
             chat_id: chat_id,
             text: text,
             reply_to_message_id: reply_to_message_id
         });
-
+        // Create the request
         var telegramRequestOptions = {
             host: 'api.telegram.org',
             port: 443,
@@ -22,29 +22,23 @@ var telegram = {
                 'Content-Length': telegramRequestData.length
             }
         };
-
+        // Execute the request
         var telegramRequest = https.request(telegramRequestOptions, function(telegramResponse) {
             telegramResponse.setEncoding('utf8');
-
-            var output = '';
-            telegramResponse.on('data', function (chunk) {
-                output += chunk;
-            });
-
+            // Log the response code
             telegramResponse.on('end', function() {
-                var obj = JSON.parse(output);
-                console.log('Telegram - received response code: ' + telegramResponse.statusCode);
+                console.log('Telegram API response code: ' + telegramResponse.statusCode);
             });
         });
-
+        // Handle error
         telegramRequest.on('error', function(err) {
+            // Log the error
             console.error('Telegram API error: ' + err.message);
         });
-
+        // Send the input
         telegramRequest.write(telegramRequestData);
-
+        // End the request
         telegramRequest.end();
-
     }
 
 };
