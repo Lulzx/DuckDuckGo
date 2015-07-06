@@ -29,8 +29,6 @@ var ddg = {
             });
             // Parse the output when the response has ended
             ddgResponse.on('end', function() {
-                // Log the response code
-                console.log('DuckDuckGo API response code: ' + ddgResponse.statusCode);
                 // Parse the response
                 var responseData = JSON.parse(output);
                 var answer = ddg.parseResponse(responseData, maxLength);
