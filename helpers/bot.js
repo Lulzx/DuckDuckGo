@@ -15,8 +15,8 @@ var bot = {
                 // Get details from the Telegram update object
                 var chat_id = telegramUpdate.message.chat.id;
                 var reply_to_message_id = telegramUpdate.message.message_id;
-                var first_name = telegramUpdate.message.chat.first_name;
-                var username = telegramUpdate.message.chat.username;
+                var first_name = telegramUpdate.message.from.first_name;
+                var username = telegramUpdate.message.from.username;
                 if (!_.isUndefined(chat_id) && !_.isUndefined(reply_to_message_id) && !_.isUndefined(first_name)) {
                     // Check the command
                     if (message.lastIndexOf('/q', 0) === 0) {
